@@ -91,6 +91,26 @@ public async Task<ActionResult> UpdateJobApplication(int id, JobApplication upda
         return StatusCode(500, "Error updating the job application.");
     }
 }
+// DELETE: api/JobApplication/{id}
+[HttpDelete("{id}")]
+
+public async Task<IActionResult> DeleteJobApplication(int id)
+{
+    // Step 1: Find the existing job application by ID
+    var existingJob = await _context.JobApplications.FindAsync(id);
+    if (existingJob == null) // If no such job exists, return not found
+    {
+        return NotFound($"No job application found with ID = {id}");
+    }
+
+    // Step 2: Remove the job application from the database
+    _context.JobApplications.Remove(existingJob);
+    await _context.SaveChangesAsync();
+
+    // Step 3: Return 204 No Content to indicate successful deletion
+    return NoContent();
+}
+
 
     }
 }
