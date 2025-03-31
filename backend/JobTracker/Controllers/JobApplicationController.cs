@@ -127,6 +127,37 @@ public async Task<ActionResult<JobApplication>> GetJobApplication(int id)
             return NoContent();
         }
 
+        // GET: api/JobApplication/search
+[HttpGet("search")]
+public async Task<ActionResult<IEnumerable<JobApplication>>> SearchJobApplications(
+    [FromQuery] string? jobTitle,
+    [FromQuery] string? company,
+    [FromQuery] string? location,
+    [FromQuery] string? status)
+{
+    // Start with the complete list of job applications
+    var query = _context.JobApplications.AsQueryable();
+
+    // Apply filters dynamically based on query parameters
+if (!string.IsNullOrEmpty(jobTitle))
+    query = query.Where(j => j.JobTitle != null && j.JobTitle.Contains(jobTitle));
+
+if (!string.IsNullOrEmpty(company))
+    query = query.Where(j => j.Company != null && j.Company.Contains(company));
+
+if (!string.IsNullOrEmpty(location))
+    query = query.Where(j => j.Location != null && j.Location.Contains(location));
+
+if (!string.IsNullOrEmpty(status))
+    query = query.Where(j => j.Status != null && j.Status.Contains(status));
+
+
+    // Execute the query and return results
+    var result = await query.ToListAsync();
+    return Ok(result);
+}
+
+
 
 
     }
