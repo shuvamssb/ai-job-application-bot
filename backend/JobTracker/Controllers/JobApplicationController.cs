@@ -12,6 +12,8 @@ GET
   "location": "Bangalore",
   "status": "Searching",
   "appliedDate": "2025-03-30T00:00:00"
+    "portal": "Test Linkedin",
+  "jobLink": "Test Linkedin Link"
 }
 PUT
 GET
@@ -22,6 +24,8 @@ GET
   "location": "Bangalore",
   "status": "Searching",
   "appliedDate": "2025-03-30T00:00:00"
+    "portal": "Test Linkedin",
+  "jobLink": "Test Linkedin Link"
 }
 
 */
@@ -95,6 +99,8 @@ namespace JobTracker.Controllers //groups all controllers under JobTracker.Contr
             existingJob.Location = updatedJob.Location;
             existingJob.Status = updatedJob.Status;
             existingJob.AppliedDate = updatedJob.AppliedDate;
+             existingJob.Portal = updatedJob.Portal;      // New field
+    existingJob.JobLink = updatedJob.JobLink;    // New field
 
             try
             {
@@ -134,6 +140,8 @@ namespace JobTracker.Controllers //groups all controllers under JobTracker.Contr
             [FromQuery] string? company,
             [FromQuery] string? location,
             [FromQuery] string? status,
+             [FromQuery] string? portal,
+              [FromQuery] string? jobLink,
               [FromQuery] int pageNumber = 1,
     [FromQuery] int pageSize = 10)
         {
@@ -152,6 +160,12 @@ namespace JobTracker.Controllers //groups all controllers under JobTracker.Contr
 
             if (!string.IsNullOrEmpty(status))
                 query = query.Where(j => j.Status != null && j.Status.Contains(status));
+
+            if (!string.IsNullOrEmpty(portal))
+    query = query.Where(j => j.Portal != null && j.Portal.Contains(portal));
+
+if (!string.IsNullOrEmpty(jobLink))
+    query = query.Where(j => j.JobLink != null && j.JobLink.Contains(jobLink));
 
 
             // Execute the query and return results
