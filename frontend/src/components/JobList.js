@@ -9,6 +9,7 @@ const JobList = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        debugger;
         const data = await getJobApplications();
         setJobs(data);
         setLoading(false);
