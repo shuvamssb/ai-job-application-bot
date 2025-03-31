@@ -14,6 +14,11 @@ builder.Services.AddSwaggerGen();
 // Register the DbContext with Dependency Injection
 builder.Services.AddDbContext<JobTrackerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Whenever I need JobTrackerDbContext, use this connection string.”.AddDbContext<> → Registers DbContext as a service that can be injected.
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "JobTracker API", Version = "v1" });
+    c.EnableAnnotations();
+});
 
 var app = builder.Build();
 
@@ -24,9 +29,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-
+app.UseRouting();
 
 
 // Use Controllers for API endpoints
