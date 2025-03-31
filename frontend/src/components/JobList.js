@@ -31,7 +31,9 @@ const JobList = () => {
         <ul>
           {jobs.map((job) => (
             <li key={job.id}>
-              <strong>{job.jobTitle}</strong> at {job.company} - {job.location} ({job.status})
+              <strong>{job.jobTitle}</strong> at {job.company} - {job.location} ({job.status})<br />
+              <strong>Portal:</strong> {job.portal} <br />
+              <strong>Job Link:</strong> <a href={job.jobLink} target="_blank" rel="noopener noreferrer">View Job</a>
             </li>
           ))}
         </ul>
