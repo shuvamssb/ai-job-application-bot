@@ -47,6 +47,22 @@ namespace JobTracker.Controllers //groups all controllers under JobTracker.Contr
             return await _context.JobApplications.ToListAsync();
         }
 
+        // GET: api/JobApplication/{id}
+[HttpGet("{id}")]
+
+public async Task<ActionResult<JobApplication>> GetJobApplication(int id)
+{
+    // Find the job application by ID
+    var jobApplication = await _context.JobApplications.FindAsync(id);
+    if (jobApplication == null)
+    {
+        return NotFound($"Job application with ID = {id} not found.");
+    }
+
+    return Ok(jobApplication);
+}
+
+
         // POST: api/JobApplication
         [HttpPost]
         public async Task<ActionResult<JobApplication>> AddJobApplication(JobApplication jobApplication)
@@ -57,59 +73,60 @@ namespace JobTracker.Controllers //groups all controllers under JobTracker.Contr
         }
 
         // PUT: api/JobApplication/{id}
-[HttpPut("{id}")] // Maps the endpoint to: api/JobApplication/1 
-public async Task<ActionResult> UpdateJobApplication(int id, JobApplication updatedJob)
-{
-    // Step 1: Check if the ID from the route matches the ID from the request body
-    if (id != updatedJob.Id)
-    {
-        return BadRequest("Job ID mismatch."); // If IDs don't match, return a bad request error
-    }
+        [HttpPut("{id}")] // Maps the endpoint to: api/JobApplication/1 
+        public async Task<ActionResult> UpdateJobApplication(int id, JobApplication updatedJob)
+        {
+            // Step 1: Check if the ID from the route matches the ID from the request body
+            if (id != updatedJob.Id)
+            {
+                return BadRequest("Job ID mismatch."); // If IDs don't match, return a bad request error
+            }
 
-    // Step 2: Find the existing job application by ID
-    var existingJob = await _context.JobApplications.FindAsync(id);
-    if (existingJob == null) // If no such job exists, return not found
-    {
-        return NotFound($"No job application found with ID = {id}");
-    }
+            // Step 2: Find the existing job application by ID
+            var existingJob = await _context.JobApplications.FindAsync(id);
+            if (existingJob == null) // If no such job exists, return not found
+            {
+                return NotFound($"No job application found with ID = {id}");
+            }
 
-    // Step 3: Update the job details with new values from the request
-    existingJob.JobTitle = updatedJob.JobTitle;
-    existingJob.Company = updatedJob.Company;
-    existingJob.Location = updatedJob.Location;
-    existingJob.Status = updatedJob.Status;
-    existingJob.AppliedDate = updatedJob.AppliedDate;
+            // Step 3: Update the job details with new values from the request
+            existingJob.JobTitle = updatedJob.JobTitle;
+            existingJob.Company = updatedJob.Company;
+            existingJob.Location = updatedJob.Location;
+            existingJob.Status = updatedJob.Status;
+            existingJob.AppliedDate = updatedJob.AppliedDate;
 
-    try
-    {
-        // Step 4: Save the updated data to the database
-        await _context.SaveChangesAsync();
-        return NoContent(); // Return 204 No Content, indicating success
-    }
-    catch (DbUpdateConcurrencyException) // If something goes wrong during update
-    {
-        return StatusCode(500, "Error updating the job application.");
-    }
-}
-// DELETE: api/JobApplication/{id}
-[HttpDelete("{id}")]
+            try
+            {
+                // Step 4: Save the updated data to the database
+                await _context.SaveChangesAsync();
+                return NoContent(); // Return 204 No Content, indicating success
+            }
+            catch (DbUpdateConcurrencyException) // If something goes wrong during update
+            {
+                return StatusCode(500, "Error updating the job application.");
+            }
+        }
+        // DELETE: api/JobApplication/{id}
+        [HttpDelete("{id}")]
 
-public async Task<IActionResult> DeleteJobApplication(int id)
-{
-    // Step 1: Find the existing job application by ID
-    var existingJob = await _context.JobApplications.FindAsync(id);
-    if (existingJob == null) // If no such job exists, return not found
-    {
-        return NotFound($"No job application found with ID = {id}");
-    }
+        public async Task<IActionResult> DeleteJobApplication(int id)
+        {
+            // Step 1: Find the existing job application by ID
+            var existingJob = await _context.JobApplications.FindAsync(id);
+            if (existingJob == null) // If no such job exists, return not found
+            {
+                return NotFound($"No job application found with ID = {id}");
+            }
 
-    // Step 2: Remove the job application from the database
-    _context.JobApplications.Remove(existingJob);
-    await _context.SaveChangesAsync();
+            // Step 2: Remove the job application from the database
+            _context.JobApplications.Remove(existingJob);
+            await _context.SaveChangesAsync();
 
-    // Step 3: Return 204 No Content to indicate successful deletion
-    return NoContent();
-}
+            // Step 3: Return 204 No Content to indicate successful deletion
+            return NoContent();
+        }
+
 
 
     }
